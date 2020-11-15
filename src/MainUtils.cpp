@@ -359,18 +359,18 @@ void compileModuleToSharedLibrary(
 
   llvm::Optional<string> constPackObjPath;
   genConstPackObj(module, constPackObjPath, outputBaseName);
-  llvm::FileRemover constPackObjRemover(constPackObjPath.getValue());
+  // llvm::FileRemover constPackObjRemover(constPackObjPath.getValue());
 
   string bitcodePath = outputBaseName + ".bc";
   genLLVMBitcode(module, bitcodePath, outputBaseName);
-  llvm::FileRemover bitcodeRemover(bitcodePath);
+  // llvm::FileRemover bitcodeRemover(bitcodePath);
 
   string modelObjPath = outputBaseName + ".o";
   genModelObject(module, bitcodePath, modelObjPath);
-  llvm::FileRemover modelObjRemover(modelObjPath);
+  // llvm::FileRemover modelObjRemover(modelObjPath);
 
   string modelSharedLibPath = outputBaseName + ".so";
-  genSharedLib(module, modelSharedLibPath, {"-shared", "-fPIC"},
+  genSharedLib(module, modelSharedLibPath, {"-g", "-shared", "-fPIC"},
       {constPackObjPath.getValueOr(""), modelObjPath},
       {"-lEmbeddedDataLoader", "-lcruntime"});
 }
